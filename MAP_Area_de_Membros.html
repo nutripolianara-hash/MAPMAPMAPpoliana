@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Método Além do Peso · Área da Paciente</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --verde:       #134F2B;
+  --verde-med:   #1A6B3A;
+  --verde-lt:    #2D8653;
+  --verde-pale:  #E8F5ED;
+  --verde-borda: #A8D5BB;
+  --cream:       #FAF9F6;
+  --cream-dark:  #F0EDE8;
+  --ink:         #1A1A1A;
+  --muted:       #5A6B5E;
+  --ghost:       #9DAB9E;
+  --white:       #FFFFFF;
+  --gold:        #C49A3C;
+  --gold-lt:     #FDF8EC;
+  --gold-borda:  #E8D5A0;
+
+  /* Fase colors */
+  --f1bg:#E8F5ED; --f1t:#134F2B; --f1b:#A8D5BB; --f1ico:#134F2B;
+  --f2bg:#EEF4FF; --f2t:#1E3A8A; --f2b:#93C5FD; --f2ico:#1E3A8A;
+  --f3bg:#FFF7ED; --f3t:#92400E; --f3b:#FCD34D; --f3ico:#92400E;
+  --f4bg:#F5F3FF; --f4t:#4C1D95; --f4b:#C4B5FD; --f4ico:#4C1D95;
+  --f5bg:#FFF1F2; --f5t:#9F1239; --f5b:#FDA4AF; --f5ico:#9F1239;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh}
+
+/* ── HEADER ── */
+.header{background:var(--verde);padding:16px 24px;position:sticky;top:0;z-index:200;border-bottom:2px solid rgba(168,213,187,.2)}
+.header-inner{max-width:960px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.logo{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:#fff;line-height:1.2}
+.logo em{font-style:italic;color:var(--verde-borda)}
+.logo-sub{font-size:10px;color:rgba(255,255,255,.45);letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+.header-right{display:flex;align-items:center;gap:20px}
+.prog-header{text-align:right}
+.prog-label{font-size:10px;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px}
+.prog-bar-wrap{width:120px;height:3px;background:rgba(255,255,255,.15);border-radius:99px;overflow:hidden}
+.prog-bar-fill{height:100%;background:linear-gradient(90deg,var(--verde-borda),#fff);border-radius:99px;transition:width .6s ease;width:0%}
+.prog-pct{font-size:11px;color:rgba(255,255,255,.6);margin-top:3px;text-align:right}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(135deg,var(--verde) 0%,var(--verde-med) 60%,var(--verde-lt) 100%);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 80% 50%,rgba(255,255,255,.06) 0%,transparent 60%)}
+.hero-inner{max-width:960px;margin:0 auto;position:relative;z-index:1}
+.hero-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:99px;padding:6px 14px;font-size:11px;font-weight:600;color:rgba(255,255,255,.85);text-transform:uppercase;letter-spacing:.08em;margin-bottom:18px}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(26px,4vw,38px);font-weight:700;color:#fff;line-height:1.25;margin-bottom:10px}
+.hero h1 em{font-style:italic;color:var(--verde-borda)}
+.hero-sub{font-size:15px;color:rgba(255,255,255,.7);line-height:1.65;max-width:520px;margin-bottom:28px}
+.hero-steps{display:flex;gap:8px;flex-wrap:wrap}
+.hero-step{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:8px 14px;font-size:12px;color:rgba(255,255,255,.8)}
+.hero-step-num{width:20px;height:20px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
+
+/* ── MAIN ── */
+.main{max-width:960px;margin:0 auto;padding:32px 24px 80px}
+
+/* ── TABS ── */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:28px}
+.tab-btn{font-size:12px;font-weight:500;padding:7px 16px;border-radius:99px;border:1.5px solid rgba(19,79,43,.18);background:var(--white);color:var(--muted);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+.tab-btn:hover{border-color:var(--verde-med);color:var(--verde-med)}
+.tab-btn.active{background:var(--verde);color:#fff;border-color:var(--verde)}
+.tab-content{display:none}.tab-content.active{display:block}
+
+/* ── FASE HEADER ── */
+.fase-hdr{display:flex;align-items:flex-start;gap:14px;margin-bottom:20px;padding:20px;background:var(--white);border-radius:16px;border:1px solid rgba(19,79,43,.1);box-shadow:0 2px 16px rgba(19,79,43,.06)}
+.fase-ico{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.fase-info{flex:1}
+.fase-num{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--ghost);margin-bottom:4px}
+.fase-titulo{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.fase-desc{font-size:13px;color:var(--muted);line-height:1.6}
+.fase-prog-wrap{display:flex;align-items:center;gap:10px;margin-top:10px}
+.fase-prog-bar{flex:1;height:4px;background:var(--cream-dark);border-radius:99px;overflow:hidden}
+.fase-prog-fill{height:100%;border-radius:99px;transition:width .5s ease}
+.fase-prog-pct{font-size:11px;font-weight:600;color:var(--muted);white-space:nowrap}
+
+/* ── CONTENT GRID ── */
+.content-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+@media(max-width:600px){.content-grid{grid-template-columns:1fr}}
+
+/* ── CARD ── */
+.card{background:var(--white);border:1px solid rgba(19,79,43,.1);border-radius:14px;overflow:hidden;transition:border-color .15s,box-shadow .15s;cursor:pointer}
+.card:hover{border-color:rgba(19,79,43,.25);box-shadow:0 4px 20px rgba(19,79,43,.08)}
+.card.done{background:var(--verde-pale);border-color:var(--verde-borda)}
+.card.done .card-title{color:var(--muted)}
+.card-head{padding:14px 16px;display:flex;align-items:flex-start;gap:10px}
+.card-chk{width:22px;height:22px;border-radius:50%;border:1.5px solid rgba(19,79,43,.25);background:var(--white);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;margin-top:1px;font-size:11px;color:transparent}
+.card.done .card-chk{background:var(--verde-med);border-color:var(--verde-med);color:#fff}
+.card-body{flex:1}
+.card-tipo{display:inline-block;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;padding:2px 8px;border-radius:99px;margin-bottom:5px}
+.tipo-aula{background:#EEF4FF;color:#1E3A8A}
+.tipo-material{background:#FFF7ED;color:#92400E}
+.tipo-lamina{background:var(--verde-pale);color:var(--verde)}
+.tipo-desafio{background:#F5F3FF;color:#4C1D95}
+.card-title{font-size:13px;font-weight:500;color:var(--ink);line-height:1.4;margin-bottom:3px}
+.card-quick{font-size:11.5px;color:var(--muted);line-height:1.55}
+.card-arrow{font-size:14px;color:var(--ghost);flex-shrink:0;transition:transform .2s;margin-top:2px}
+.card.expanded .card-arrow{transform:rotate(45deg)}
+.card-expand{display:none;padding:0 16px 14px 48px;border-top:1px solid rgba(19,79,43,.07)}
+.card.expanded .card-expand{display:block}
+.expand-obj{font-size:12px;color:var(--muted);line-height:1.65;padding:10px 0;border-bottom:1px solid rgba(19,79,43,.08);margin-bottom:10px;font-style:italic}
+.expand-label{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.09em;color:var(--ghost);margin:10px 0 5px}
+.expand-list{display:flex;flex-direction:column;gap:4px}
+.expand-item{display:flex;align-items:flex-start;gap:7px;font-size:11.5px;color:var(--muted);line-height:1.55}
+.expand-dot{width:4px;height:4px;border-radius:50%;background:var(--verde-borda);margin-top:5px;flex-shrink:0}
+
+/* ── LÂMINAS SECTION ── */
+.laminas-section{margin-top:24px}
+.laminas-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--ink);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.laminas-title::after{content:'';flex:1;height:1px;background:rgba(19,79,43,.12)}
+.laminas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.lamina-card{background:var(--white);border:1.5px solid rgba(19,79,43,.12);border-radius:12px;overflow:hidden;transition:all .2s;cursor:pointer}
+.lamina-card:hover{border-color:var(--verde-med);box-shadow:0 4px 20px rgba(19,79,43,.1);transform:translateY(-2px)}
+.lamina-thumb{width:100%;aspect-ratio:4/3;background:linear-gradient(135deg,var(--verde-pale),var(--cream-dark));display:flex;align-items:center;justify-content:center;font-size:32px;position:relative;overflow:hidden}
+.lamina-thumb-img{width:100%;height:100%;object-fit:cover}
+.lamina-thumb-placeholder{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding:16px}
+.lamina-thumb-placeholder span:first-child{font-size:28px}
+.lamina-thumb-placeholder span:last-child{font-size:10px;color:var(--muted);font-weight:500}
+.lamina-info{padding:10px 12px}
+.lamina-num{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--ghost);margin-bottom:3px}
+.lamina-nome{font-size:12px;font-weight:600;color:var(--ink);line-height:1.4}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.modal-overlay.open{display:flex}
+.modal{background:var(--white);border-radius:20px;max-width:720px;width:100%;max-height:90vh;overflow-y:auto;position:relative}
+.modal-head{padding:20px 24px 16px;border-bottom:1px solid rgba(19,79,43,.1);display:flex;align-items:flex-start;justify-content:space-between;gap:12px;position:sticky;top:0;background:var(--white);z-index:1;border-radius:20px 20px 0 0}
+.modal-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--ink)}
+.modal-sub{font-size:12px;color:var(--muted);margin-top:3px}
+.modal-close{width:32px;height:32px;border-radius:50%;background:var(--cream-dark);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--muted);flex-shrink:0;transition:background .15s}
+.modal-close:hover{background:rgba(19,79,43,.12)}
+.modal-body{padding:20px 24px 24px}
+.modal-img{width:100%;border-radius:12px;margin-bottom:16px;box-shadow:0 4px 20px rgba(0,0,0,.1)}
+.modal-content-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.09em;color:var(--ghost);margin-bottom:8px}
+.modal-points{display:flex;flex-direction:column;gap:8px}
+.modal-point{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--verde-pale);border:1px solid var(--verde-borda);border-radius:10px}
+.modal-point-dot{width:6px;height:6px;border-radius:50%;background:var(--verde-med);margin-top:5px;flex-shrink:0}
+.modal-point-text{font-size:13px;color:var(--muted);line-height:1.6}
+.modal-point-text strong{color:var(--ink);font-weight:600}
+
+/* ── CALLOUT ── */
+.callout{padding:14px 18px;border-radius:12px;font-size:13px;line-height:1.65;margin:16px 0}
+.callout-verde{background:var(--verde-pale);border:1px solid var(--verde-borda);color:var(--verde)}
+.callout-gold{background:var(--gold-lt);border:1px solid var(--gold-borda);color:#6B4F1A}
+
+/* ── FASE SELECTOR ── */
+.fase-selector{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+.fase-sel-btn{display:flex;align-items:center;gap:7px;padding:8px 14px;border-radius:12px;border:1.5px solid rgba(19,79,43,.15);background:var(--white);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+.fase-sel-btn:hover{border-color:rgba(19,79,43,.3)}
+.fase-sel-btn.active{border-width:2px}
+.fase-sel-ico{width:24px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.fase-sel-info{text-align:left}
+.fase-sel-num{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--ghost);line-height:1}
+.fase-sel-nome{font-size:12px;font-weight:600;color:var(--ink);line-height:1.3}
+
+/* ── EMPTY STATE ── */
+.empty{text-align:center;padding:48px 24px;color:var(--muted)}
+.empty-ico{font-size:36px;margin-bottom:12px}
+.empty p{font-size:14px;line-height:1.6}
+
+/* ── RESPONSIVE ── */
+@media(max-width:480px){
+  .hero{padding:32px 16px 40px}
+  .main{padding:20px 16px 60px}
+  .hero-steps{flex-direction:column}
+  .header-right{display:none}
+  .fase-selector{overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <div class="logo">
+      método <em>além do peso</em>
+      <div class="logo-sub">Área da Paciente</div>
+    </div>
+    <div class="header-right">
+      <div class="prog-header">
+        <div class="prog-label">Seu progresso</div>
+        <div class="prog-bar-wrap"><div class="prog-bar-fill" id="globalProg"></div></div>
+        <div class="prog-pct" id="globalProgPct">0% concluído</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">✨ Bem-vinda à sua jornada</div>
+    <h1>Oi, Maravilhosa!<br><em>Sua jornada começa aqui.</em></h1>
+    <p class="hero-sub">Aqui você encontra as 5 fases do Método Além do Peso, os materiais educativos e as lâminas que vão te guiar em cada etapa do processo.</p>
+    <div class="hero-steps">
+      <div class="hero-step"><div class="hero-step-num">1</div>Organizando sua Rotina</div>
+      <div class="hero-step"><div class="hero-step-num">2</div>Protocolo de Aceleração</div>
+      <div class="hero-step"><div class="hero-step-num">3</div>Diagnóstico Comportamental</div>
+      <div class="hero-step"><div class="hero-step-num">4</div>Manutenção SMART</div>
+      <div class="hero-step"><div class="hero-step-num">5</div>Revisão Estratégica</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('fases',this)">📋 As 5 Fases</button>
+    <button class="tab-btn" onclick="switchTab('materiais',this)">📚 Materiais</button>
+    <button class="tab-btn" onclick="switchTab('laminas',this)">🖼️ Lâminas</button>
+  </div>
+
+  <!-- TAB: FASES -->
+  <div class="tab-content active" id="tab-fases">
+
+    <div class="fase-selector" id="faseSel"></div>
+    <div id="faseContent"></div>
+
+  </div>
+
+  <!-- TAB: MATERIAIS -->
+  <div class="tab-content" id="tab-materiais">
+    <div class="content-grid">
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-chk">✓</div>
+          <div class="card-body">
+            <span class="card-tipo tipo-material">Material</span>
+            <div class="card-title">Ficha Pré-Consulta</div>
+            <div class="card-quick">Preencha antes de cada consulta para aproveitarmos melhor o tempo juntas.</div>
+          </div>
+          <span class="card-arrow">+</span>
+        </div>
+        <div class="card-expand">
+          <div class="expand-obj">A ficha pré-consulta ajuda a gente a identificar seus padrões da semana e ajustar o plano com mais precisão.</div>
+          <div class="expand-label">Como usar</div>
+          <div class="expand-list">
+            <div class="expand-item"><div class="expand-dot"></div>Preencha até 24h antes da consulta</div>
+            <div class="expand-item"><div class="expand-dot"></div>Seja honesta — não existe semana errada</div>
+            <div class="expand-item"><div class="expand-dot"></div>Anote suas dúvidas e dificuldades da semana</div>
+          </div>
+        </div>
+      </div>
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-chk">✓</div>
+          <div class="card-body">
+            <span class="card-tipo tipo-material">Material</span>
+            <div class="card-title">Manual da Paciente</div>
+            <div class="card-quick">Tudo que você precisa saber sobre o acompanhamento, check-ins e comunicação.</div>
+          </div>
+          <span class="card-arrow">+</span>
+        </div>
+        <div class="card-expand">
+          <div class="expand-obj">O manual reúne todas as regras, processos e informações do seu acompanhamento para você consultar sempre que precisar.</div>
+          <div class="expand-label">O que está incluído</div>
+          <div class="expand-list">
+            <div class="expand-item"><div class="expand-dot"></div>Como funciona o check-in semanal</div>
+            <div class="expand-item"><div class="expand-dot"></div>Regras do WhatsApp exclusivo</div>
+            <div class="expand-item"><div class="expand-dot"></div>Política de cancelamento e reagendamento</div>
+            <div class="expand-item"><div class="expand-dot"></div>Programa de indicação premiada</div>
+          </div>
+        </div>
+      </div>
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-chk">✓</div>
+          <div class="card-body">
+            <span class="card-tipo tipo-material">Material</span>
+            <div class="card-title">E-book: Como Lidar com o Doce Sem Culpa</div>
+            <div class="card-quick">Estratégias práticas para incluir o doce na rotina sem sabotar o processo.</div>
+          </div>
+          <span class="card-arrow">+</span>
+        </div>
+        <div class="card-expand">
+          <div class="expand-obj">Você não precisa abandonar o doce. Precisa entender sua relação com ele e criar estratégias que funcionam na sua vida real.</div>
+          <div class="expand-label">O que você vai aprender</div>
+          <div class="expand-list">
+            <div class="expand-item"><div class="expand-dot"></div>Por que a restrição total não funciona</div>
+            <div class="expand-item"><div class="expand-dot"></div>Como planejar o doce sem culpa</div>
+            <div class="expand-item"><div class="expand-dot"></div>Estratégias para os momentos de ansiedade</div>
+            <div class="expand-item"><div class="expand-dot"></div>Receitas e substituições inteligentes</div>
+          </div>
+        </div>
+      </div>
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-chk">✓</div>
+          <div class="card-body">
+            <span class="card-tipo tipo-desafio">Desafio</span>
+            <div class="card-title">Diário Alimentar — 7 dias</div>
+            <div class="card-quick">Registre sua alimentação por uma semana para identificarmos seus padrões reais.</div>
+          </div>
+          <span class="card-arrow">+</span>
+        </div>
+        <div class="card-expand">
+          <div class="expand-obj">O diário alimentar revela padrões que você não percebe no dia a dia — horários de fome emocional, gatilhos e escolhas automáticas.</div>
+          <div class="expand-label">Como fazer</div>
+          <div class="expand-list">
+            <div class="expand-item"><div class="expand-dot"></div>Registre tudo que come, incluindo beliscos</div>
+            <div class="expand-item"><div class="expand-dot"></div>Anote o horário e como você estava se sentindo</div>
+            <div class="expand-item"><div class="expand-dot"></div>Não julgue — registre com honestidade</div>
+            <div class="expand-item"><div class="expand-dot"></div>Traga para nossa próxima consulta</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="callout callout-verde">
+      ✨ <strong>Novos materiais são adicionados conforme você avança nas fases.</strong> Cada conteúdo foi pensado para o momento certo da sua jornada — não antes, não depois.
+    </div>
+  </div>
+
+  <!-- TAB: LÂMINAS -->
+  <div class="tab-content" id="tab-laminas">
+    <div class="callout callout-gold" style="margin-bottom:20px">
+      🖼️ <strong>As lâminas são seu guia visual do processo.</strong> Cada uma aborda um tema específico da nutrição comportamental de forma simples e direta.
+    </div>
+    <div id="laminasFaseSelector" class="fase-selector"></div>
+    <div class="laminas-grid" id="laminasGrid"></div>
+  </div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal" id="modalContent">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title" id="modalTitle"></div>
+        <div class="modal-sub" id="modalSub"></div>
+      </div>
+      <button class="modal-close" onclick="closeModalBtn()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// DADOS DAS 5 FASES
+// ═══════════════════════════════════════════════
+const FASES = [
+  {
+    id:'f1', num:'Fase 1', nome:'Organizando sua Rotina',
+    desc:'Aqui vamos organizar seu dia a dia, entender sua rotina real e criar uma base sólida para o processo começar com consistência.',
+    ico:'🌱', bg:'var(--f1bg)', t:'var(--f1t)', b:'var(--f1b)',
+    conteudos:[
+      {
+        tipo:'aula', titulo:'Por que sua rotina sabota seus resultados',
+        quick:'Entenda como o dia a dia impacta diretamente nas suas escolhas alimentares.',
+        obj:'Você vai compreender que o problema não é força de vontade — é estrutura. Rotinas desorganizadas criam escolhas alimentares automáticas e inconscientes.',
+        topicos:[
+          'Como a falta de estrutura gera decisões alimentares por impulso',
+          'O que são gatilhos ambientais e como identificar os seus',
+          'A diferença entre comer por fome e comer por hábito ou ansiedade',
+          'Por que planos alimentares genéricos não funcionam na vida real',
+        ]
+      },
+      {
+        tipo:'aula', titulo:'Mapeando sua linha do tempo alimentar',
+        quick:'Entenda toda a sua história com a comida — do início até hoje.',
+        obj:'Sua relação atual com a comida foi construída ao longo de anos. Entender essa história é o primeiro passo para reescrevê-la com consciência.',
+        topicos:[
+          'Como a infância molda a relação com a comida',
+          'Identificando os momentos em que a alimentação mudou na sua vida',
+          'Padrões repetidos: o que sua história alimentar revela',
+          'Como usar o passado para construir o futuro sem repetir os erros',
+        ]
+      },
+      {
+        tipo:'aula', titulo:'Construindo seu plano alimentar real',
+        quick:'Seu plano é construído para a sua rotina — não para uma rotina imaginária.',
+        obj:'Um plano alimentar que funciona precisa caber na sua vida real: seus horários, suas preferências, seus compromissos e seu ritmo.',
+        topicos:[
+          'Como mapear janelas de alimentação na sua rotina atual',
+          'Planejamento alimentar sem rigidez: a regra do 80/20',
+          'Como adaptar o plano nos dias atípicos sem perder o fio',
+          'Ferramentas práticas para organizar a alimentação sem sofrimento',
+        ]
+      },
+      {
+        tipo:'lamina', titulo:'Lâmina 01 · Sua Rotina Real',
+        quick:'Material visual para mapear sua rotina alimentar diária.',
+        obj:'',topicos:[]
+      },
+      {
+        tipo:'desafio', titulo:'Desafio da Semana',
+        quick:'Registre sua alimentação por 3 dias sem julgamento — apenas observando.',
+        obj:'O objetivo não é julgar o que você come, mas observar seus padrões com curiosidade e honestidade.',
+        topicos:[
+          'Registre horários, o que comeu e como estava se sentindo',
+          'Não tente mudar nada ainda — só observe',
+          'Traga o registro para a próxima consulta',
+        ]
+      },
+    ]
+  },
+  {
+    id:'f2', num:'Fase 2', nome:'Protocolo de Aceleração',
+    desc:'Estrutura para acelerar sua perda de peso com consistência e sem radicalismo. Aqui a ciência e o comportamento trabalham juntos.',
+    ico:'⚡', bg:'var(--f2bg)', t:'var(--f2t)', b:'var(--f2b)',
+    conteudos:[
+      {
+        tipo:'aula', titulo:'Como o corpo responde ao déficit calórico',
+        quick:'Entenda a ciência do emagrecimento de forma simples e sem mitos.',
+        obj:'Você vai entender como o corpo realmente funciona para emagrecer — sem terrorismo nutricional e sem promessas impossíveis.',
+        topicos:[
+          'O que é déficit calórico e por que não precisa ser radical',
+          'Como o metabolismo se adapta e o que fazer para evitar estagnação',
+          'A diferença entre perda de gordura e perda de peso na balança',
+          'Por que a velocidade do emagrecimento importa para a manutenção',
+        ]
+      },
+      {
+        tipo:'aula', titulo:'Nutrientes que aceleram — sem restrição',
+        quick:'Como usar a composição do prato a seu favor sem abrir mão do prazer.',
+        obj:'Certos alimentos têm propriedades que ajudam no processo sem precisar de exclusão. Aprenda a usá-los de forma inteligente.',
+        topicos:[
+          'Proteína: o macronutriente mais importante para o emagrecimento',
+          'Fibras e saciedade: como montar um prato que sustenta mais',
+          'Hidratação e seu impacto no metabolismo e na fome',
+          'Alimentos anti-inflamatórios e o impacto no inchaço',
+        ]
+      },
+      {
+        tipo:'aula', titulo:'Movimento e alimentação: a dupla que sustenta',
+        quick:'Como alinhar alimentação e atividade física sem extremos.',
+        obj:'A relação entre o que você come e como você se move é mais simples do que parece — e muito mais poderosa do que qualquer dieta isolada.',
+        topicos:[
+          'Como comer ao redor do treino para potencializar resultado',
+          'O que acontece com o metabolismo quando você sedentária',
+          'Por que exercício sem nutrição adequada trava o processo',
+          'Movimento no dia a dia: pequenas mudanças de grande impacto',
+        ]
+      },
+      {
+        tipo:'lamina', titulo:'Lâmina 02 · Protocolo de Aceleração',
+        quick:'Guia visual das estratégias do protocolo de aceleração.',
+        obj:'',topicos:[]
+      },
+      {
+        tipo:'lamina', titulo:'Lâmina 03 · Montando o Prato Ideal',
+        quick:'Como montar pratos nutritivos, saborosos e que sustentam.',
+        obj:'',topicos:[]
+      },
+      {
+        tipo:'desafio', titulo:'Desafio da Semana',
+        quick:'Inclua proteína em todas as refeições principais por 7 dias.',
+        obj:'A proteína é o nutriente que mais impacta a saciedade e a preservação muscular durante o emagrecimento.',
+        topicos:[
+          'Pelo menos 20-30g de proteína por refeição principal',
+          'Registre como você se sentiu de saciedade ao longo do dia',
+          'Compare com a semana anterior',
+        ]
+      },
+    ]
+  },
+  {
+    id:'f3', num:'Fase 3', nome:'Diagnóstico Comportamental',
+    desc:'O coração do método. Aqui identificamos os padrões que sustentam ou sabotam sua jornada e fortalecemos escolhas conscientes.',
+    ico:'🧠', bg:'var(--f3bg)', t:'var(--f3t)', b:'var(--f3b)',
+    conteudos:[
+      {
+        tipo:'aula', titulo:'Comer emocional: entendendo seus gatilhos',
+        quick:'Por que você come quando não está com fome — e como lidar com isso.',
+        obj:'Comer emocional não é fraqueza. É um mecanismo aprendido. Entendê-lo é o primeiro passo para mudar a relação com a comida.',
+        topicos:[
+          'A diferença entre fome física e fome emocional',
+          'Os 5 gatilhos emocionais mais comuns que levam ao comer por impulso',
+          'Como identificar seus gatilhos específicos sem julgamento',
+          'Estratégias práticas para criar espaço entre o gatilho e a ação',
+        ]
+      },
+      {
+        tipo:'aula', titulo:'Autossabotagem: o padrão que ninguém fala',
+        quick:'Por que você se boicota quando está indo bem — e como sair desse ciclo.',
+        obj:'A autossabotagem tem uma função protetora. Entender essa função é o que permite desativá-la sem luta.',
+        topicos:[
+          'O que é autossabotagem e por que acontece especialmente quando você está indo bem',
+          'A crença limitante por trás do ciclo de recomeçar',
+          'Como o medo do sucesso sabota mais do que o medo do fracasso',
+          'Interrompendo o padrão: técnicas cognitivas simples e eficazes',
+        ]
+      },
+      {
+        tipo:'aula', titulo:'Relação com a balança e com o espelho',
+        quick:'Como parar de deixar os números ditarem seu valor e seu comportamento.',
+        obj:'A obsessão com a balança é uma das maiores sabotadoras do processo. Você vai aprender a usar métricas mais inteligentes.',
+        topicos:[
+          'Por que o peso flutua e o que isso realmente significa',
+          'Outras métricas que mostram progresso quando a balança não move',
+          'Como criar uma relação saudável com o próprio corpo durante o processo',
+          'Parando a comparação: como ela destrói a motivação e o que fazer',
+        ]
+      },
+      {
+        tipo:'lamina', titulo:'Lâmina 04 · Mapa dos Gatilhos',
+        quick:'Material para identificar e mapear seus gatilhos emocionais.',
+        obj:'',topicos:[]
+      },
+      {
+        tipo:'lamina', titulo:'Lâmina 05 · Fome Física x Fome Emocional',
+        quick:'Como diferenciar os dois tipos de fome no momento que importa.',
+        obj:'',topicos:[]
+      },
+      {
+        tipo:'desafio', titulo:'Desafio da Semana',
+        quick:'Toda vez que quiser comer sem fome física, pause e pergunte: "O que eu estou sentindo agora?"',
+        obj:'O objetivo não é parar de comer — é criar consciência antes da ação.',
+        topicos:[
+          'Faça a pausa de 5 minutos antes de comer por impulso',
+          'Registre o sentimento que veio antes',
+          'Não se julgue se comer mesmo assim — a observação já é vitória',
+        ]
+      },
+    ]
+  },
+  {
+    id:'f4', num:'Fase 4', nome:'Protocolo de Manutenção SMART',
+    desc:'A fase que quase ninguém ensina. Aqui construímos o plano para você não reganhar o peso perdido — nunca mais.',
+    ico:'🏆', bg:'var(--f4bg)', t:'var(--f4t)', b:'var(--f4b)',
+    conteudos:[
+      {
+        tipo:'aula', titulo:'Por que você sempre voltava ao ponto inicial',
+        quick:'A resposta científica e comportamental para o ciclo eterno de recomeçar.',
+        obj:'Entender por que você voltava é a chave para garantir que desta vez seja diferente. Não é força de vontade — é estrutura de manutenção.',
+        topicos:[
+          'O que acontece metabolicamente após a perda de peso',
+          'A armadilha do "agora posso tudo" — o pós-meta perigoso',
+          'Como o cérebro defende o peso anterior e o que fazer',
+          'Por que dietas de restrição quase sempre levam ao reganho',
+        ]
+      },
+      {
+        tipo:'aula', titulo:'Flexibilidade inteligente: eventos, viagens e imprevistos',
+        quick:'Como manter a estrutura quando a vida aperta — festas, viagens e semanas caóticas.',
+        obj:'Sustentar resultado não significa perfeição. Significa ter estratégias para os momentos que a vida coloca no caminho.',
+        topicos:[
+          'Como se preparar para eventos sociais sem ansiedade',
+          'A estratégia do dia seguinte: como voltar ao trilho sem drama',
+          'Viagens e alimentação: como manter o processo sem se privar',
+          'A regra do 1 prato: como comer em festas sem sabotar a semana',
+        ]
+      },
+      {
+        tipo:'aula', titulo:'Construindo autonomia alimentar',
+        quick:'O objetivo final: você não depender de mim para fazer boas escolhas.',
+        obj:'O sucesso real do acompanhamento é quando você internaliza as ferramentas e consegue navegar sozinha. Esse módulo prepara você para isso.',
+        topicos:[
+          'O que é autonomia alimentar e como ela se desenvolve',
+          'Como tomar decisões alimentares inteligentes sem plano rígido',
+          'Lendo seu corpo: sinais de fome, saciedade e necessidades reais',
+          'O plano de longo prazo: como manter sem acompanhamento constante',
+        ]
+      },
+      {
+        tipo:'lamina', titulo:'Lâmina 06 · Protocolo de Manutenção',
+        quick:'Guia visual das estratégias para não reganhar o peso perdido.',
+        obj:'',topicos:[]
+      },
+      {
+        tipo:'lamina', titulo:'Lâmina 07 · Flexibilidade Inteligente',
+        quick:'Como agir nos eventos, viagens e dias atípicos.',
+        obj:'',topicos:[]
+      },
+      {
+        tipo:'desafio', titulo:'Desafio da Semana',
+        quick:'Escolha 1 situação "difícil" da semana e aplique a estratégia do dia seguinte.',
+        obj:'A manutenção se constrói no como você responde aos deslizes — não em nunca deslizar.',
+        topicos:[
+          'Identifique 1 evento ou situação que costuma te tirar dos trilhos',
+          'Aplique a estratégia planejada',
+          'Registre como foi — sem julgamento',
+        ]
+      },
+    ]
+  },
+  {
+    id:'f5', num:'Fase 5', nome:'Revisão Estratégica',
+    desc:'Avaliamos todos os dados desde a primeira consulta, validamos conquistas, identificamos o que ainda está em construção e definimos juntas os próximos passos.',
+    ico:'🎯', bg:'var(--f5bg)', t:'var(--f5t)', b:'var(--f5b)',
+    conteudos:[
+      {
+        tipo:'aula', titulo:'Revisão completa da sua jornada',
+        quick:'Olhamos para tudo — físico, comportamental e emocional — desde o início.',
+        obj:'A revisão estratégica é o momento de honrar tudo que foi construído e ter clareza do que ainda precisa ser trabalhado.',
+        topicos:[
+          'Comparativo físico: dados de composição corporal do início até agora',
+          'Análise comportamental: quais padrões mudaram de verdade',
+          'O que funcionou e por que — registrando as ferramentas que você pode carregar',
+          'O que ainda está em construção — sem julgamento, com estratégia',
+        ]
+      },
+      {
+        tipo:'aula', titulo:'Construindo sua identidade alimentar',
+        quick:'Você não é mais a pessoa que estava travada no ciclo. Essa aula consolida quem você se tornou.',
+        obj:'Identidade alimentar é quando as escolhas saudáveis se tornam naturais — não mais um esforço. Esse é o resultado real do MAP.',
+        topicos:[
+          'O que é identidade alimentar e como ela muda o comportamento',
+          'Como reforçar a nova identidade no dia a dia',
+          'A diferença entre seguir uma dieta e ser uma pessoa que come bem',
+          'Como manter a evolução após o acompanhamento',
+        ]
+      },
+      {
+        tipo:'aula', titulo:'Seus próximos passos',
+        quick:'O que fazer depois — com ou sem acompanhamento contínuo.',
+        obj:'O encerramento de uma fase é o início de outra. Você vai sair dessa revisão com clareza e direção para os próximos meses.',
+        topicos:[
+          'Definindo metas reais para os próximos 3 a 6 meses',
+          'Como usar as ferramentas do MAP de forma autônoma',
+          'Quando buscar acompanhamento novamente — os sinais de alerta',
+          'Celebrando conquistas: por que reconhecer o progresso importa',
+        ]
+      },
+      {
+        tipo:'lamina', titulo:'Lâmina 08 · Linha do Tempo da Sua Evolução',
+        quick:'Material para documentar e celebrar sua transformação.',
+        obj:'',topicos:[]
+      },
+      {
+        tipo:'desafio', titulo:'Desafio Final',
+        quick:'Escreva uma carta para a versão de você que começou esse processo.',
+        obj:'A carta é o ato de reconhecer quem você era, quem você é e quem você escolheu se tornar.',
+        topicos:[
+          'O que você diria para a você do início?',
+          'O que foi mais difícil? O que surpreendeu positivamente?',
+          'Qual é a maior transformação que você percebe em você hoje?',
+        ]
+      },
+    ]
+  }
+];
+
+// ═══════════════════════════════════════════════
+// ESTADO
+// ═══════════════════════════════════════════════
+let faseSel = 'f1';
+let laminaFaseSel = 'todas';
+const done = JSON.parse(localStorage.getItem('map_done')||'{}');
+
+function saveDone(){ localStorage.setItem('map_done',JSON.stringify(done)); updateProgress(); }
+
+function updateProgress(){
+  let total=0,completed=0;
+  FASES.forEach(f=>f.conteudos.forEach(c=>{total++;if(done[f.id+'_'+c.titulo])completed++;}));
+  const pct=total?Math.round(completed/total*100):0;
+  document.getElementById('globalProg').style.width=pct+'%';
+  document.getElementById('globalProgPct').textContent=pct+'% concluído';
+}
+
+// ═══════════════════════════════════════════════
+// FASE SELECTOR
+// ═══════════════════════════════════════════════
+function buildFaseSel(){
+  const c=document.getElementById('faseSel');
+  c.innerHTML=FASES.map(f=>`
+    <button class="fase-sel-btn${f.id===faseSel?' active':''}"
+      style="${f.id===faseSel?`border-color:${f.b};background:${f.bg};`:''}"
+      onclick="selectFase('${f.id}',this)">
+      <div class="fase-sel-ico" style="background:${f.bg}">${f.ico}</div>
+      <div class="fase-sel-info">
+        <div class="fase-sel-num">${f.num}</div>
+        <div class="fase-sel-nome">${f.nome.split(' ').slice(0,3).join(' ')}</div>
+      </div>
+    </button>
+  `).join('');
+}
+
+function selectFase(id,el){
+  faseSel=id;
+  document.querySelectorAll('.fase-sel-btn').forEach(b=>b.classList.remove('active'));
+  const f=FASES.find(x=>x.id===id);
+  if(el){el.classList.add('active');el.style.borderColor=f.b;el.style.background=f.bg;}
+  document.querySelectorAll('#faseSel .fase-sel-btn').forEach(b=>{
+    if(!b.classList.contains('active')){b.style.borderColor='';b.style.background='';}
+  });
+  renderFase();
+}
+
+function renderFase(){
+  const f=FASES.find(x=>x.id===faseSel);
+  const c=document.getElementById('faseContent');
+
+  // Progresso da fase
+  let total=f.conteudos.length, comp=0;
+  f.conteudos.forEach(x=>{ if(done[f.id+'_'+x.titulo]) comp++; });
+  const pct=Math.round(comp/total*100);
+
+  c.innerHTML=`
+    <div class="fase-hdr">
+      <div class="fase-ico" style="background:${f.bg}">${f.ico}</div>
+      <div class="fase-info">
+        <div class="fase-num">${f.num}</div>
+        <div class="fase-titulo">${f.nome}</div>
+        <div class="fase-desc">${f.desc}</div>
+        <div class="fase-prog-wrap">
+          <div class="fase-prog-bar"><div class="fase-prog-fill" style="width:${pct}%;background:${f.t}"></div></div>
+          <div class="fase-prog-pct">${comp}/${total} concluídos</div>
+        </div>
+      </div>
+    </div>
+    <div class="content-grid">
+      ${f.conteudos.map(item=>{
+        const isDone=!!done[f.id+'_'+item.titulo];
+        const isLamina=item.tipo==='lamina';
+        return `
+          <div class="card${isDone?' done':''}" onclick="${isLamina?`openLaminaModal('${item.titulo}','${item.quick}','${f.id}')`:('toggleCard(this,\''+f.id+'_'+item.titulo+'\')')}">
+            <div class="card-head">
+              <div class="card-chk">${isDone?'✓':''}</div>
+              <div class="card-body">
+                <span class="card-tipo tipo-${item.tipo}">${{aula:'Aula',material:'Material',lamina:'Lâmina',desafio:'Desafio'}[item.tipo]}</span>
+                <div class="card-title">${item.titulo}</div>
+                <div class="card-quick">${item.quick}</div>
+              </div>
+              ${isLamina?'<span class="card-arrow" style="color:'+f.t+'">→</span>':'<span class="card-arrow">+</span>'}
+            </div>
+            ${!isLamina&&item.topicos.length?`
+            <div class="card-expand">
+              ${item.obj?`<div class="expand-obj">${item.obj}</div>`:''}
+              ${item.topicos.length?`
+                <div class="expand-label">O que você vai aprender</div>
+                <div class="expand-list">
+                  ${item.topicos.map(t=>`<div class="expand-item"><div class="expand-dot"></div>${t}</div>`).join('')}
+                </div>
+              `:''}
+              <div style="margin-top:12px">
+                <button onclick="event.stopPropagation();markDone('${f.id}','${item.titulo}',this)" 
+                  style="font-size:12px;padding:6px 14px;border-radius:99px;border:1px solid ${f.b};background:${isDone?f.bg:'transparent'};color:${f.t};cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s">
+                  ${isDone?'✓ Concluído':'Marcar como concluído'}
+                </button>
+              </div>
+            </div>
+            `:''}
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+}
+
+function toggleCard(el,key){
+  el.classList.toggle('expanded');
+}
+
+function markDone(faseId,titulo,btn){
+  const key=faseId+'_'+titulo;
+  done[key]=!done[key];
+  saveDone();
+  const card=btn.closest('.card');
+  card.classList.toggle('done',done[key]);
+  card.querySelector('.card-chk').textContent=done[key]?'✓':'';
+  btn.textContent=done[key]?'✓ Concluído':'Marcar como concluído';
+  // update fase progress
+  const f=FASES.find(x=>x.id===faseId);
+  let total=f.conteudos.length,comp=0;
+  f.conteudos.forEach(x=>{if(done[faseId+'_'+x.titulo])comp++;});
+  const pct=Math.round(comp/total*100);
+  const bar=document.querySelector('.fase-prog-fill');
+  const pctEl=document.querySelector('.fase-prog-pct');
+  if(bar)bar.style.width=pct+'%';
+  if(pctEl)pctEl.textContent=comp+'/'+total+' concluídos';
+}
+
+// ═══════════════════════════════════════════════
+// LÂMINAS
+// ═══════════════════════════════════════════════
+const LAMINAS_POR_FASE = {};
+FASES.forEach(f=>{
+  LAMINAS_POR_FASE[f.id] = f.conteudos.filter(c=>c.tipo==='lamina').map((c,i)=>({
+    ...c, faseId:f.id, faseNome:f.nome, faseIco:f.ico, faseBg:f.bg, faseT:f.t, faseB:f.b,
+    num: `Lâmina 0${Object.values(LAMINAS_POR_FASE).flat().length+i+1}`
+  }));
+});
+
+function buildLaminaFaseSel(){
+  const c=document.getElementById('laminasFaseSelector');
+  c.innerHTML=`
+    <button class="fase-sel-btn${laminaFaseSel==='todas'?' active':''}" onclick="selectLaminaFase('todas',this)">
+      <div class="fase-sel-ico" style="background:var(--cream-dark)">🖼️</div>
+      <div class="fase-sel-info">
+        <div class="fase-sel-num">Todas</div>
+        <div class="fase-sel-nome">as lâminas</div>
+      </div>
+    </button>
+    ${FASES.map(f=>`
+      <button class="fase-sel-btn${laminaFaseSel===f.id?' active':''}"
+        style="${laminaFaseSel===f.id?`border-color:${f.b};background:${f.bg}`:''}"
+        onclick="selectLaminaFase('${f.id}',this)">
+        <div class="fase-sel-ico" style="background:${f.bg}">${f.ico}</div>
+        <div class="fase-sel-info">
+          <div class="fase-sel-num">${f.num}</div>
+          <div class="fase-sel-nome">${f.nome.split(' ').slice(0,2).join(' ')}</div>
+        </div>
+      </button>
+    `).join('')}
+  `;
+}
+
+function selectLaminaFase(id,el){
+  laminaFaseSel=id;
+  document.querySelectorAll('#laminasFaseSelector .fase-sel-btn').forEach(b=>{b.classList.remove('active');b.style.borderColor='';b.style.background='';});
+  el.classList.add('active');
+  if(id!=='todas'){
+    const f=FASES.find(x=>x.id===id);
+    el.style.borderColor=f.b;el.style.background=f.bg;
+  }
+  renderLaminas();
+}
+
+function renderLaminas(){
+  const c=document.getElementById('laminasGrid');
+  let laminas=[];
+  if(laminaFaseSel==='todas'){
+    FASES.forEach(f=>f.conteudos.filter(x=>x.tipo==='lamina').forEach(l=>laminas.push({...l,f})));
+  } else {
+    const f=FASES.find(x=>x.id===laminaFaseSel);
+    f.conteudos.filter(x=>x.tipo==='lamina').forEach(l=>laminas.push({...l,f}));
+  }
+
+  if(!laminas.length){c.innerHTML='<div class="empty"><div class="empty-ico">🖼️</div><p>Nenhuma lâmina ainda nesta fase.<br>Elas serão adicionadas conforme você avança.</p></div>';return;}
+
+  c.innerHTML=laminas.map((l,i)=>`
+    <div class="lamina-card" onclick="openLaminaModal('${l.titulo}','${l.quick}','${l.f.id}')">
+      <div class="lamina-thumb" style="background:linear-gradient(135deg,${l.f.bg},var(--cream-dark))">
+        <div class="lamina-thumb-placeholder">
+          <span>${l.f.ico}</span>
+          <span>Adicione a imagem<br>da lâmina aqui</span>
+        </div>
+      </div>
+      <div class="lamina-info">
+        <div class="lamina-num">${l.f.num} · ${l.f.nome}</div>
+        <div class="lamina-nome">${l.titulo.replace(/Lâmina \d+ · /,'')}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openLaminaModal(titulo,quick,faseId){
+  const f=FASES.find(x=>x.id===faseId);
+  document.getElementById('modalTitle').textContent=titulo;
+  document.getElementById('modalSub').textContent=f.num+' · '+f.nome;
+  document.getElementById('modalBody').innerHTML=`
+    <div style="width:100%;aspect-ratio:4/3;background:linear-gradient(135deg,${f.bg},var(--cream-dark));border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;border:1px dashed ${f.b}">
+      <div style="text-align:center;color:${f.t}">
+        <div style="font-size:40px;margin-bottom:8px">${f.ico}</div>
+        <div style="font-size:13px;font-weight:600">Adicione a imagem da lâmina aqui</div>
+        <div style="font-size:11px;opacity:.7;margin-top:4px">Substitua este bloco pela imagem real</div>
+      </div>
+    </div>
+    <div class="expand-label">Sobre esta lâmina</div>
+    <div style="font-size:13px;color:var(--muted);line-height:1.65;margin-top:8px">${quick}</div>
+  `;
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal(e){if(e.target===document.getElementById('modal'))closeModalBtn();}
+function closeModalBtn(){document.getElementById('modal').classList.remove('open');}
+
+// ═══════════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════════
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+  if(id==='laminas'){buildLaminaFaseSel();renderLaminas();}
+}
+
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
+buildFaseSel();
+renderFase();
+buildLaminaFaseSel();
+renderLaminas();
+updateProgress();
+</script>
+</body>
+</html>
